@@ -5,5 +5,7 @@
         public string Registration { get; set; } = string.Empty;
         public int ProductionYear { get; set; }
         public int LoadCapacityKg { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
     }
 }

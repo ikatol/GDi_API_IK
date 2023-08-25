@@ -38,5 +38,73 @@ namespace GDi_API_IK.Controllers {
             return StatusCode(ResponseCodes.GetHttpCode(response.ResponseCode), response);
         }
         #endregion
+
+        #region PUTs
+        [HttpPut("UpdateDriver")]
+        public async Task<ActionResult<LayerResponse>> UpdateDriver(PutDriverRequestDTO driver) {
+            var validationResult = ValidateDriverData(driver.Name);
+
+            if (validationResult.validationSuccess) {
+                var serviceResponse = await _driverService.UpdateDriverAsync(driver);
+
+                LayerResponse response = new() {
+                    Message = serviceResponse.Message,
+                    ResponseCode = serviceResponse.ResponseCode,
+                    Success = serviceResponse.Success,
+                    ExMessage = serviceResponse.ExMessage
+                };
+
+                return StatusCode(ResponseCodes.GetHttpCode(response.ResponseCode), response);
+            } else {
+                return BadRequest(validationResult.message);
+            }
+        }
+        #endregion
+
+        #region DELETEs
+        [HttpDelete("DeleteDriver/{id}")]
+        public async Task<ActionResult<LayerResponse>> DeleteDriver(int id) {
+            var serviceResponse = await _driverService.DeleteDriverAsync(id);
+            LayerResponse response = new() {
+                Message = serviceResponse.Message,
+                ResponseCode = serviceResponse.ResponseCode,
+                Success = serviceResponse.Success,
+                ExMessage = serviceResponse.ExMessage
+            };
+            return StatusCode(ResponseCodes.GetHttpCode(response.ResponseCode), response);
+        }
+
+        #endregion
+
+        #region POSTs
+        [HttpPost("AddDriver")]
+        public async Task<ActionResult<LayerResponse>> AddDriver(PostDriverRequestDTO newDriver) {
+            var validationResult = ValidateDriverData(newDriver.Name);
+
+            if (validationResult.validationSuccess) {
+                var serviceResponse = await _driverService.AddDriverAsync(newDriver);
+                LayerResponse response = new() {
+                    Message = serviceResponse.Message,
+                    ResponseCode = serviceResponse.ResponseCode,
+                    Success = serviceResponse.Success,
+                    ExMessage = serviceResponse.ExMessage
+                };
+                return StatusCode(ResponseCodes.GetHttpCode(response.ResponseCode), response);
+            } else {
+                return BadRequest(validationResult.message);
+            }
+        }
+        #endregion
+
+        private (bool validationSuccess, string message) ValidateDriverData(string name) {
+            bool validationSuccess = true;
+            string message = "";
+
+            if (name == string.Empty) {
+                message += "Name is Required | ";
+                validationSuccess = false;
+            }
+            return (validationSuccess, message);
+        }
     }
 }

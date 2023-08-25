@@ -1,6 +1,8 @@
-﻿using GDi_API_IK.Model.DTOs.Cars;
+﻿using GDi_API_IK.Model.DTOs;
+using GDi_API_IK.Model.DTOs.Cars;
 using GDi_API_IK.Model.Entities;
 using GDi_API_IK.Model.Repositories;
+using GDi_API_IK.Model.Repositories.Drivers;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -18,12 +20,19 @@ namespace GDi_API_IK.Model.Services
                 Model = newCar.Model,
                 Registration = newCar.Registration,
                 ProductionYear = newCar.ProductionYear,
-                LoadCapacityKg = newCar.LoadCapacityKg
+                LoadCapacityKg = newCar.LoadCapacityKg,
+                Longitude = newCar.Longitude,
+                Latitude = newCar.Latitude
             };
 
             var repositoryResponse = await _carRepository.AddAsync(carToAdd);
 
             return repositoryResponse;
+        }
+
+        public async Task<LayerResponse> AssignDriverAsync(PutAssignDriverRequestDTO assign) {
+            var repositroyResponse = await _carRepository.AssignDriver(assign.CarId, assign.DriverId);
+            return repositroyResponse;
         }
 
         public async Task<LayerResponse> DeleteCarAsync(int id) {
@@ -63,13 +72,26 @@ namespace GDi_API_IK.Model.Services
             return response;
         }
 
+        public async Task<LayerResponse<GetCarResponseDTO>> GetCarByRegistrationAsync(string registration) {
+            var repositroyResponse = await _carRepository.GetByRegistrationAsync(registration);
+            return new LayerResponse<GetCarResponseDTO> {
+                Message = repositroyResponse.Message,
+                ExMessage = repositroyResponse.ExMessage,
+                Payload = repositroyResponse.Payload is null ? null : new GetCarResponseDTO(repositroyResponse.Payload),
+                Success = repositroyResponse.Success,
+                ResponseCode = repositroyResponse.ResponseCode
+            };
+        }
+
         public async Task<LayerResponse> UpdateCarAsync(PutCarRequestDTO updatedCar) {
             var repositoryResponse = await _carRepository.UpdateAsync(new Car() {
                 Id = updatedCar.Id,
                 Registration = updatedCar.Registration,
                 Model = updatedCar.Model,
                 ProductionYear = updatedCar.ProductionYear,
-                LoadCapacityKg  = updatedCar.LoadCapacityKg
+                LoadCapacityKg  = updatedCar.LoadCapacityKg,
+                Longitude = updatedCar.Longitude,
+                Latitude = updatedCar.Latitude
             });
 
             return repositoryResponse;

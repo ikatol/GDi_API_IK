@@ -1,4 +1,5 @@
-﻿using GDi_API_IK.Model.DTOs.Cars;
+﻿using GDi_API_IK.Model.DTOs;
+using GDi_API_IK.Model.DTOs.Cars;
 
 namespace GDi_API_IK.Model.Services
 {
@@ -9,5 +10,7 @@ namespace GDi_API_IK.Model.Services
         Task<LayerResponse> DeleteCarAsync(int id);
 
         Task<LayerResponse> UpdateCarAsync(PutCarRequestDTO updatedCar);
+        Task<LayerResponse<GetCarResponseDTO>> GetCarByRegistrationAsync(string registration);
+        Task<LayerResponse> AssignDriverAsync(PutAssignDriverRequestDTO assign);
     }
 }

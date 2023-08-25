@@ -23,7 +23,7 @@ namespace GDi_API_IK.Model.DContext {
 
             //modelBuilder.Entity<Driver>().HasOne(d => d.Car).WithOne(c => c.Driver)
             //    .HasForeignKey<Driver>(d => d.CarId).OnDelete(DeleteBehavior.SetNull);
-
+            modelBuilder.Entity<Car>().Property(p => p.Registration).UseCollation("Latin1_General_CI_AS");
         }
     }
 }

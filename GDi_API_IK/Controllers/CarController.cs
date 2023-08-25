@@ -1,5 +1,6 @@
 ﻿using Azure;
 using GDi_API_IK.Model;
+using GDi_API_IK.Model.DTOs;
 using GDi_API_IK.Model.DTOs.Cars;
 using GDi_API_IK.Model.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,13 @@ namespace GDi_API_IK.Controllers
         //}
 
         #region GETs
+
+        [HttpGet("GetCarByRegistration/{registration}")]
+        public async Task<ActionResult<LayerResponse<GetCarResponseDTO>>> GetCarByRegistration(string registration) {
+            var serviceResponse = await _carService.GetCarByRegistrationAsync(registration);
+            return StatusCode(ResponseCodes.GetHttpCode(serviceResponse.ResponseCode), serviceResponse);
+        }
+
         [HttpGet("GetFullCars")]
         public async Task<ActionResult<LayerResponse<List<GetFullCarResponseDTO>>>> GetFullCars() {
             var serviceResponse = await _carService.GetAllCarsAsync(includeDrivers: true, includeCoordinates: true);
@@ -151,6 +159,12 @@ namespace GDi_API_IK.Controllers
             } else {
                 return BadRequest(validationResult.message);
             }
+        }
+
+        [HttpPut("AssignDriver")]
+        public async Task<ActionResult<LayerResponse>> AssignDriver(PutAssignDriverRequestDTO assignRequest) {
+            var response = await _carService.AssignDriverAsync(assignRequest);
+            return StatusCode(ResponseCodes.GetHttpCode(response.ResponseCode), response);
         }
         #endregion
 

@@ -8,5 +8,10 @@ namespace GDi_API_IK.Model.Repositories {
         Task<LayerResponse> DeleteAsync(int id);
 
         Task<LayerResponse> UpdateAsync(Car car);
+        Task<LayerResponse<Car>> GetByRegistrationAsync(string registration);
+
+        Task<LayerResponse<Car>> GetCarAsync(int id, bool includeDriver = false);
+
+        Task<LayerResponse> AssignDriver(int CarId, int? DriverId);
     }
 }
